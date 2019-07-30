@@ -12,7 +12,7 @@
     "predev": "tsc -p server",
     "dev": "concurrently  \"ng serve --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/server.js\"",
     "prod": "concurrently \"ng build -aot -prod && tsc -p server && node dist/server/server.js\"",
-    "test": "ng test --watch --rootDir=client",
+    "test": "ng test --watch",
     "coverage": "jest --coverage --config jest.config.json",
     "lint": "ng lint",
     "lintbe": "tslint server/**/**.ts{,x}",

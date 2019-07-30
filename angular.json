@@ -75,6 +75,7 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "client/polyfills.ts",
             "tsConfig": "client/tsconfig.spec.json",
+            "rootDir": "client",
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/tether/dist/js/tether.min.js",
