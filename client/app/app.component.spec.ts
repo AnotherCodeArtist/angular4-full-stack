@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import {AuthService} from "./services/auth.service";
+import {AuthService} from './services/auth.service';
 
 describe('Component: App', () => {
   let component: AppComponent;
