@@ -14,6 +14,7 @@ import passport from 'passport';
 
 import User from './models/user';
 import chatRoutes from './chat-routes';
+import {catSystem} from './logging';
 
 // dotenv.load('.env');
 
@@ -26,7 +27,6 @@ const app = express();
 
 // Register JWT Strategy
 passport.use(new Strategy(jwtOpts, (jwtPayload, done) => {
-  // console.log(JSON.stringify(jwtPayload));
   User.findOne({_id: jwtPayload.user._id})
     .then((user) => done(null, user))
     .catch(done);
@@ -57,7 +57,7 @@ app.use(morgan('dev'));
 
 const ioServer = chatRoutes(app);
 setRoutes(app, passport);
-console.log('Registered Routes');
+catSystem.info('Registered Routes');
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });

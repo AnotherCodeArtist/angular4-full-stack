@@ -1,21 +1,24 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
+import {catController} from '../logging';
 
 abstract class BaseCtrl<T extends mongoose.Document> {
 
   // Defines the Model that is used for all CRUD operations
   abstract model: mongoose.Model<T>;
-  // A string representing a space-separated list of field that should be
+  // A string representing a space-separated list of fields that should be
   // returned by getList()
   abstract projection: string;
 
 
   // Get all enities of type model
-  getAll = (req, res) => {
-    this.model.find({}, (err, docs) => {
-      if (err) { return console.error(err); }
-      res.json(docs);
-    });
-  };
+  getAll = (req, res) =>
+    this.model.find({})
+      .then(docs => res.json(docs))
+      .catch(err => {
+        catController.error('Error while finding documents', err);
+        res.status(500).send({message: err})
+      });
+
 
   // Returns all entities but only those fields contained in 'projection'
   getList = (req, res) =>
@@ -77,17 +80,18 @@ abstract class BaseCtrl<T extends mongoose.Document> {
       .then(m => req[this.model.collection.collectionName] = m)
       .then(() => next())
       .catch(err => {
-        console.error(err);
+        catController.error(`Could not update id=${req[this.model.collection.collectionName]._id}`, err);
         res.status(500).json({message: err});
       });
 
   // Delete by id
-  delete = (req, res) => {
-    this.model.findOneAndRemove({ _id: req[this.model.collection.collectionName]._id }, (err) => {
-      if (err) { return console.error(err); }
-      res.sendStatus(200);
-    });
-  };
+  delete = (req, res) =>
+    this.model.findOneAndRemove({ _id: req[this.model.collection.collectionName]._id })
+      .then(() => res.sendStatus(200))
+      .catch((err) => {
+        catController.error(`Could not delete id=${req[this.model.collection.collectionName]._id}`, err);
+        res.status(500).send({message: err})
+      })
 }
 
 export default BaseCtrl;
