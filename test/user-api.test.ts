@@ -36,7 +36,20 @@ describe('Create new Users', () => {
     expect(newUser.provider).toBe('local');
     expect(newUser.role).toBe('user');
   });
+  it('should return a human readable error message if the user is already taken', async () => {
+    const user = {
+      username: 'test',
+      email: 'test@test.com',
+      passord: 'topsecret'
+    };
+    const newUserResponse = await supertest(app).post('/api/users').send(user);
+    const duplicateUserResponse = await supertest(app).post('/api/users').send(user);
+    expect(duplicateUserResponse.status).toEqual(400);
+    expect(duplicateUserResponse.body.message).toEqual('Sorry, but this username/email is already in use!');
+  })
 });
+
+
 
 describe('Reading user profiles', () => {
 

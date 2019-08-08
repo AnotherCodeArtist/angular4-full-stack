@@ -21,6 +21,17 @@ export default class UserCtrl extends BaseCtrl<IUserDocument> {
     });
   };
 
+  insert = (req, res, next) => {
+    const obj = new this.model(req.body);
+    obj.save()
+      .then(m => (this.model.hasOwnProperty('load')) ? this.model['load'](m._id) : m)
+      .then(m => req[this.model.collection.collectionName] = m)
+      .then(() => next())
+      .catch(err => err.code === 11000 ?
+          res.status(400).json({message: 'Sorry, but this username/email is already in use!'}) :
+          res.status(400).json({message: err.message || err}));
+  };
+
   setRoleAndProvider = (req, res, next) =>  {
       req.body.role = 'user';
       req.body.provider = 'local';

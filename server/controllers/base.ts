@@ -62,7 +62,7 @@ abstract class BaseCtrl<T extends mongoose.Document> {
       .then(m => (this.model.hasOwnProperty('load')) ? this.model['load'](m._id) : m)
       .then(m => req[this.model.collection.collectionName] = m)
       .then(() => next())
-      .catch(err => res.status(err.code === 11000 ? 400 : 500).json({message: err}));
+      .catch(err => err.code === 11000 ? next(err) : res.status(err.code === 11000 ? 400 : 500).json({message: err}));
   };
 
   // Get by id
