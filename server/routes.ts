@@ -2,8 +2,6 @@ import * as express from 'express';
 
 import CatCtrl from './controllers/cat';
 import UserCtrl from './controllers/user';
-import Cat from './models/cat';
-import User from './models/user';
 import {PassportStatic} from 'passport';
 import {Application} from 'express';
 import * as jwt from 'jsonwebtoken';
